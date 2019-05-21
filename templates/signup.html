@@ -1,0 +1,42 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <!--<link href="https://fonts.googleapis.com/css?family=Wendy+One" rel="stylesheet">-->
+        <!--<link href = "style.css" rel = "stylesheet">-->
+        <title>Sign Up!</title>
+    </head>
+    <body>
+        <header>
+            <nav>
+            <a href="{{url_for('blog, default='All')}}">Main Blog Page</a>
+            <a href="{{url_for('addblog')}}";>Add A Blog Entry</a>
+            <a href="{{url_for('logout')}}" style="display:inline; float: right">Sign Out</a>
+            </nav>
+        </header>
+        <form action='/newpost' method="post">
+            <table>
+                <tr>
+                    <td><label for="username">Username</label></td>
+                    <td>
+                        <input id="username" name="username" type="text">
+                    </td>                      
+                    <td><p class = "error">{{username_error}}</p></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password</label></td>
+                    <td>
+                        <input id="password" name="password" type="password">
+                    </td>
+                    <td><p class = "error">{{password_error}}</p></td>
+                <tr>
+                    <td><label for="verify">Verify Password</label></td>
+                    <td>
+                        <input id="verify" name="verify" type="password">
+                    </td>
+                    <td><p class = "error">{{verify_password_error}}</p></td>
+                </tr>
+                <tr><td><input type="submit" value="Sign Up!" /></td><tr>   
+            </table>
+        </form>
+    </body>
+</html>
