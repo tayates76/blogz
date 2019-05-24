@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h1>Add a Blog</h1>
+    <h1>{{title}}</h1>
     <table>
         <form method='post' action='/newpost' id='body_area'>
             <tr>
@@ -20,7 +20,15 @@
                 <label>
                 <td class='error'>{{body_error}}</td>
             </tr>
-            <tr><td><input type='submit' value='Add Blog' /></td>
+            <tr>
+                <td></td>
+                <td>
+                    <!--<input type='hidden' name='author' value='{{author}}'>-->
+                    <h4 style="text-align:left">Authored by: {{author}}</h4>
+                <td>
+            </tr>
+            <tr>
+                <td><input type='submit' value='Add Blog' /></td>
             </tr>
         </form>
     </table>

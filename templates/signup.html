@@ -8,12 +8,12 @@
     <body>
         <header>
             <nav>
-            <a href="{{url_for('blog, default='All')}}">Main Blog Page</a>
-            <a href="{{url_for('addblog')}}";>Add A Blog Entry</a>
-            <a href="{{url_for('logout')}}" style="display:inline; float: right">Sign Out</a>
+            <a href={{url_for('blog')}}>Main Blog Page</a>
+            <a href={{url_for('addblog')}}>Add A Blog Entry</a>
+            <a href={{url_for('logout')}} style="display:inline; float: right">Sign Out</a>
             </nav>
         </header>
-        <form action='/newpost' method="post">
+        <form action='/signup' method="post">
             <table>
                 <tr>
                     <td><label for="username">Username</label></td>
