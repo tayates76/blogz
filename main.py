@@ -4,12 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
+app.config['TESTING'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:blogz@localhost:3306/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'a;lsdkj1adoij'
 
-
+db = SQLAlchemy(app)
 
 class Blog(db.Model):
     
@@ -36,6 +37,7 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+db.create_all()
 
 def validate_form(username, password, verify):
     username_error = ""
@@ -111,9 +113,6 @@ def login():
         
         username = request.form['username']
         password = request.form['password']
-        
-
-        
 
         if username == "" or password == "":
             if username == "":
@@ -213,7 +212,14 @@ def new_post():
     db.session.commit()
     blog = Blog.query.get(new_blog.id)
     return render_template('singlepost.html',title=blog.title,blog=blog)
+
     
+@app.route('/singlepost', methods = ['GET'])
+def singlepost():
+    blog_id = int(request.args['blog-id'])
+    blog = Blog.query.get(blog_id)
+    return render_template('singlepost.html',title=blog.title,blog=blog)
+
 @app.route('/logout', methods = ['GET', 'POST'])
 def logout():
     del session['username']
