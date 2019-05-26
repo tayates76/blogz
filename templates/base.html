@@ -1,23 +1,20 @@
 <!doctype html>
 <html>
-    <head>
-        <title>{{title}}</title>
-    </head>
-    <body>
-        <header>
-            <nav>
-            <!--https://www.w3schools.com/tags/tag_nav.asp-->
-            <a href={{url_for('blog')}}>Main Blog Page</a>
-            <a href={{url_for('addblog')}} ;>Add A Blog Entry</a>
-            <a href={{url_for('logout')}} style="display:inline; float: right">Sign Out</a>
-        
-        
-        
-            </nav>
-        </header>
-        {% block content %}
-        {% endblock %}
 
-    </body>
+<head>
+    <title>{{title}}</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/">Home</a> | <a href="/blog">All Posts</a> | <a href="/newpost">New Post</a> | <a href="/login">Login</a> | <a href="/logout">Logout</a> {% block content %} {% endblock %}
+
+</body>
+
 </html>
 

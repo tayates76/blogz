@@ -1,38 +1,23 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <!--<link href="https://fonts.googleapis.com/css?family=Wendy+One" rel="stylesheet">-->
-        <!--<link href = "style.css" rel = "stylesheet">-->
-        <title>Sign In</title>
-    </head>
-    <body>
-        <header>
-        <nav>
-        <!--https://www.w3schools.com/tags/tag_nav.asp-->
-        <a href={{url_for('signup')}}>Sign Up</a>
-        <a href={{url_for('blog', default='All')}}>Main Blog Page</a>
-        </nav>
-    </header>
-        <h1>Sign In Blogz!</h1>
-        <form action='/login' method="post">
-            <table>
-                <tr>
-                    <td><label for="username">Username</label></td>
-                    <td>
-                        <input id="username" name="username" type="text">
-                    </td>
-                    <td><p class = "error">{{username_error}}</p></td>
-                </tr>
-                <tr>
-                    <td><label for="password">Password</label></td>
-                    <td>
-                        <input id="password" name="password" type="password">
-                    </td>
-                    <td><p class = "error">{{password_error}}</p></td>
-                <tr>
-                    <td><input type="submit" value="Sign In!" /></td>
-                <tr>    
-            </table>
-        </form>
-    </body>
-</html>
+{% extends 'base.html' %} {% block content %}
+<h1>Login</h1>
+<form method="post">
+    <table>
+        <tr>
+            <td><label for="username">Username</label></td>
+            <td>
+                <input name="username" type="text" value="">
+                <span class="error">{{username_error}}</span>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="password">Password</label></td>
+            <td>
+                <input name="password" type="password">
+                <span class="error">{{password_error}}</span>
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="Login">
+</form>
+<p>Need to Singup? <a href="/signup">Create A New Account</a></p>
+{% endblock %}
