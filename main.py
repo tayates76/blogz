@@ -76,7 +76,7 @@ def require_login():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return redirect('/blog')
+    return redirect (url_for('blog', blog_id=0))
 
 
 @app.route('/signup', methods = ['GET', 'POST'])
@@ -87,7 +87,7 @@ def signup():
         verify = request.form['verify']
         error_msgs = validate_form(username, password, verify)
 
-        if error_msgs[0]=='' and error_msgs[1]=='' and error_msgs[2]=='':
+        if error_msgs[0] == '' and error_msgs[1] == '' and error_msgs[2] == '':
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
@@ -110,10 +110,7 @@ def login():
         password_error = ""
         
         username = request.form['username']
-        password = request.form['password']
-        
-
-        
+        password = request.form['password']      
 
         if username == "" or password == "":
             if username == "":
@@ -125,6 +122,7 @@ def login():
             return render_template('login.html', username_error=username_error, password_error=password_error)
 
         user = User.query.filter_by(username=username).first()
+        
         if not user:
             username_error = 'Username not found'
             return render_template('login.html', username_error=username_error)
@@ -136,7 +134,7 @@ def login():
         if user and user.password == password:
             status = "Currently Logged In"
             session['username'] = user.username
-            return redirect('/newpost')
+            return redirect(url_for('addblog'))
         # return render_template('addblog', title='Add a Blog', username=username)
     
     return render_template('login.html')
@@ -163,15 +161,16 @@ def login():
 #         blogs = Blog.query.all()
 #         return render_template('blogs.html',title="Blogz", blogs=blogs)
 
-@app.route('/blog')
-def blog():
-    blogs = Blog.query.all()
-    return render_template('blogs.html',title="Blogz", blogs=blogs)
-    # else:
-    #     blog_id = int(blog_id)
-    #     blog = Blog.query.get(blog_id)
-    #     #blog = Blog.query.get(int(blog_id))
-    #     return render_template('singlepost.html',title=blog.title,blog=blog)    
+@app.route('/blog/<int:blog_id>')
+def blog(blog_id):
+    if blog_id == 0:
+        blogs = Blog.query.all()
+        return render_template('blogs.html',title="Blogz", blogs=blogs)
+    else:
+        blog_id = int(blog_id)
+        blog = Blog.query.get(blog_id)
+        #blog = Blog.query.get(int(blog_id))
+        return render_template('singlepost.html',title=blog.title,blog=blog)    
         
 
 @app.route('/user_blogs', methods=['POST']) #http://flask.pocoo.org/docs/1.0/api/#url-route-registrations
@@ -185,34 +184,55 @@ def user_blogs(user_id, blog_id):
         user = User.query.filter_by(username=username).first()
         return render_template('user_blogs.html',title="Blogz", blogs=blogs, username=username)  
 
-@app.route('/addblog')
+@app.route('/addblog', methods = ['GET', 'POST'])
 def addblog():
-    author = User.query.filter_by(username=session['username']).first()
-    return render_template('addblog.html',title="Add a Blog", author = author.username)
+    if request.method == 'POST':
+        author = User.query.filter_by(username=session['username']).first()
+        blog_title = request.form['title']
+        blog_body = request.form['body']
+        #blog_author = request.form['author']
+        body_error = ""
+        title_error = ""
 
-@app.route('/newpost', methods=['POST'])
-def new_post():
+        if blog_title == "":
+            title_error = "Give your blog a title"
+        if blog_body == "":
+            body_error = "Tell us something"
+        if body_error != "" or title_error != "":
+            return render_template('addblog.html', title="Add a Blog", author = author.username, body_error=body_error,title_error=title_error,blog_title=blog_title,blog_body=blog_body)
 
-    owner = User.query.filter_by(username = session['username']).first()
+        new_blog = Blog(blog_title, blog_body, author)
+        db.session.add(new_blog)
+        db.session.commit()
+        blog = Blog.query.get(new_blog.id)
+        return render_template('singlepost.html',title=blog.title,blog=blog)
+        #return render_template('addblog.html',title="Add a Blog", author = author.username)
+    return render_template('addblog.html')
 
-    blog_title = request.form['title']
-    blog_body = request.form['body']
-    #blog_author = request.form['author']
-    body_error = ""
-    title_error = ""
 
-    if blog_title == "":
-        title_error = "Give your blog a title"
-    if blog_body == "":
-        body_error = "Tell us something"
-    if body_error != "" or title_error != "":
-        return render_template("addblog.html",title="Build-a-Blog",body_error=body_error,title_error=title_error,blog_title=blog_title,blog_body=blog_body)
+# @app.route('/newpost', methods=['GET', 'POST'])
+# def new_post():
 
-    new_blog = Blog(blog_title, blog_body, owner)
-    db.session.add(new_blog)
-    db.session.commit()
-    blog = Blog.query.get(new_blog.id)
-    return render_template('singlepost.html',title=blog.title,blog=blog)
+#     owner = User.query.filter_by(username = session['username']).first()
+
+#     blog_title = request.form['title']
+#     blog_body = request.form['body']
+#     #blog_author = request.form['author']
+#     body_error = ""
+#     title_error = ""
+
+#     if blog_title == "":
+#         title_error = "Give your blog a title"
+#     if blog_body == "":
+#         body_error = "Tell us something"
+#     if body_error != "" or title_error != "":
+#         return render_template("addblog.html",title="Build-a-Blog",body_error=body_error,title_error=title_error,blog_title=blog_title,blog_body=blog_body)
+
+#     new_blog = Blog(blog_title, blog_body, owner)
+#     db.session.add(new_blog)
+#     db.session.commit()
+#     blog = Blog.query.get(new_blog.id)
+#     return render_template('singlepost.html',title=blog.title,blog=blog)
     
 @app.route('/logout', methods = ['GET', 'POST'])
 def logout():

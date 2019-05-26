@@ -13,7 +13,7 @@
         <div>
         <table >
             <tr>
-              <th><a href="../singlepost.html">{{blog.title}}</a></th>
+              <th><a href = {{ url_for('blog', blog_id=blog.id) }}></a></th>
                 <td class='delete'>
                     <form  method="POST" action="/delete-blog" 
                          style="display:inline-block;">
